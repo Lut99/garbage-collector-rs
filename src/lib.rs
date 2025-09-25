@@ -147,9 +147,9 @@ pub struct GarbageCollector<T> {
 }
 
 // Markers
-// SAFETY: Adding this marker is OK if `T` is `Sync`, because the pointers are obeying the usual
-// read-only semantics and can therefore be ignored. The only wrench is `clean()`, but that one's
-// already marked as unsafe.
+// SAFETY: Adding this marker is OK if `T` is `Sync`, because nobody can mutate a `T` once it's
+// created and creation does not invalidate existing `T`s. Only `GarbageCollector::clean()` is
+// problemetic, but that's unsafe anyway.
 unsafe impl<T: Sync> Sync for GarbageCollector<T> {}
 
 // Constructors
