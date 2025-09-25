@@ -1,12 +1,24 @@
-# garbage-collector-rs
-A very generic, static data structure for promoting anything to 'static lifetime at the cost of making them garbage collected.
+[package]
+name = "garbage-collector"
+version = "0.1.0"
+edition = "2024"
+authors = ["Lut99"]
+repository = "https://github.com/Lut99/garbage-collector-rs"
+license = "Apache-2.0"
+description = """
+A very generic, static data structure for promoting anything to 'static lifetime at the cost of
+making them garbage collected.
 
 
-## Functionality
-The use-case for this crate is to patch your code: you are somewhere deep in the weeds and have encountered an awkward situation where you needed to have a longer reference than you do.
+# Functionality
+The use-case for this crate is to patch your code: you are somewhere deep in the weeds and have
+encountered an awkward situation where you needed to have a longer reference than you do.
 This crate contributes the `GarbageCollector` struct to workaround the problem.
-It is a simple data structure for storing a sequence of arbitrary objects `T` in. The idea is that you can defer (clones of) local references to it, which is defined somewhere where it outlives the current scope, and you can use its longer-lived references.
-The struct is fully thread-safe, meaning that you can also declare it as `'static` to make `'static` objects.
+It is a simple data structure for storing a sequence of arbitrary objects `T` in. The idea is that
+you can defer (clones of) local references to it, which is defined somewhere where it outlives the
+current scope, and you can use its longer-lived references.
+The struct is fully thread-safe, meaning that you can also declare it as `'static` to make
+`'static` objects.
 
 An example:
 ```rust
@@ -26,11 +38,12 @@ assert_eq!(hello_world(String::from("Hello, world!")), "Hello, world!");
 // Upon destruction, the `String` is deallocated, which is now the end of the program.
 ```
 
-### Cleaning mid-lifetime
+## Cleaning mid-lifetime
 The (unsafe!) `GarbageCollector::clean()`-function allows you to deallocate all tracked objects
 before the collector itself is deallocated.
 
-This is an incredibly unsafe operation, because it requires you to guarantee that **no objects currently registered are referenced!**.
+This is an incredibly unsafe operation, because it requires you to guarantee that **no objects
+currently registered are referenced!**.
 If you do, it will trigger use-after-free errors, which is Undefined Behaviour (UB).
 
 However, if you know what you are doing, it can help you save memory.
@@ -54,12 +67,14 @@ assert_eq!(hello_world(String::from("Hello, world!")), "Hello, world!");
 unsafe { DUMP.clean() };
 ```
 
-### Features
+## Features
 The crate has the following features to make your life easier:
-- `parking_lot`: Will use the [`Mutex`](https://docs.rs/parking_lot/latest/parking_lot/type.Mutex.html) provided by the [`parking_lot`](https://docs.rs/parking_lot)-crate instead of the one provided by `std`.
+- `parking_lot`: Will use the
+  [`Mutex`](https://docs.rs/parking_lot/latest/parking_lot/type.Mutex.html) provided by the
+  [`parking_lot`](https://docs.rs/parking_lot)-crate instead of the one provided by `std`.
 
 
-## Usage
+# Usage
 To use this library in your own project, simply add it to your `Cargo.toml` file:
 ```toml
 [dependencies]
@@ -72,7 +87,7 @@ You can commit to a specific version by mentioning the tag:
 garbage-collector = { git = "https://github.com/Lut99/garbage-collector-rs", tag = "v0.1.0" }
 ```
 
-### Generating docs
+## Generating docs
 To see the code documentation, run:
 ```sh
 cargo doc --open
@@ -80,9 +95,23 @@ cargo doc --open
 in the root of the crate.
 
 
-## Contributing
-Contributions to this crate are welcome! Please feel free to [leave an issue](https://github.com/Lut99/garbage-collector-rs/issues) or [create a pull request](https://github.com/Lut99/garbage-collector-rs/pulls).
+# Contributing
+Contributions to this crate are welcome! Please feel free to
+[leave an issue](https://github.com/Lut99/garbage-collector-rs/issues) or
+[create a pull request](https://github.com/Lut99/garbage-collector-rs/pulls).
 
 
-## License
-This project is licensed under the Apache 2.0 license. See [`./LICENSE`](./LICENSE) for more information.
+# License
+This project is licensed under the Apache 2.0 license. See [`./LICENSE`](./LICENSE) for more
+information.
+"""
+
+
+[dependencies]
+parking_lot = { version = "0.12.0", optional = true }
+
+
+[features]
+default = []
+
+parking_lot = ["dep:parking_lot"]
