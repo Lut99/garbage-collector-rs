@@ -254,14 +254,16 @@ impl<T: PartialEq> GarbageCollector<T> {
     #[track_caller]
     pub fn register_dedup(&self, obj: T) -> &T {
         // First, check if the object already exists
-        let data = lock!(self.data);
-        for obj_prime in data.iter() {
-            // SAFETY: We can interpret the `obj_prime` as a valid reference to `T` because we are
-            // the authority on whether it exists or not. Hence, we take care it is valid iff it is
-            // present in `self.data`.
-            let obj_prime: &T = unsafe { (*obj_prime).as_ref().unwrap_unchecked() };
-            if &obj == obj_prime {
-                return obj_prime;
+        {
+            let data = lock!(self.data);
+            for obj_prime in data.iter() {
+                // SAFETY: We can interpret the `obj_prime` as a valid reference to `T` because we are
+                // the authority on whether it exists or not. Hence, we take care it is valid iff it is
+                // present in `self.data`.
+                let obj_prime: &T = unsafe { (*obj_prime).as_ref().unwrap_unchecked() };
+                if &obj == obj_prime {
+                    return obj_prime;
+                }
             }
         }
 
