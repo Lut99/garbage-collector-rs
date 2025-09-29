@@ -4,6 +4,12 @@ This file keeps track of changes to the `garbage-collector` Rust crate.
 This project uses [semantic versioning](https://semver.org). As such, breaking changes are indicated by **(BREAKING)**.
 
 
+## v0.1.1 - 2025-09-29
+### Fixed
+- Deadlock when using `register_dedup()`.
+- Safety comment in code.
+
+
 ## v0.1.0 - 2025-09-25
 Initial release!
 
