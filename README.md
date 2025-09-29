@@ -69,7 +69,7 @@ garbage-collector = { git = "https://github.com/Lut99/garbage-collector-rs" }
 You can commit to a specific version by mentioning the tag:
 ```toml
 [dependencies]
-garbage-collector = { git = "https://github.com/Lut99/garbage-collector-rs", tag = "v0.1.0" }
+garbage-collector = { git = "https://github.com/Lut99/garbage-collector-rs", tag = "v0.1.1" }
 ```
 
 ### Generating docs
